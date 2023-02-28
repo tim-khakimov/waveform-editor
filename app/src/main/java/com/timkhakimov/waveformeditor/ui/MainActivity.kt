@@ -1,7 +1,9 @@
 package com.timkhakimov.waveformeditor.ui
 
 import android.os.Bundle
+import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +22,10 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: WaveFormsViewModel by lazy {
         ViewModelProvider(this)[WaveFormsViewModel::class.java].apply {
-                repository = WaveFormsRepositoryImpl(this@MainActivity)
+                repository = WaveFormsRepositoryImpl(
+                    assets,
+                    getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!
+                )
             }
     }
 
@@ -39,7 +44,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initList()
         observeData()
+        initListeners()
         viewModel.loadWaveForms()
+    }
+
+    private fun initListeners() = with(binding) {
+        exportButtonTextView.setOnClickListener {
+            viewModel.addWaveForm(waveFormEditorView.exportSlice())
+        }
     }
 
     private fun initList() {
@@ -81,7 +93,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setWaves(waves: List<WaveItem>) {
-        binding.waveFormEditorView.setWaves(waves)
+    private fun setWaves(waves: List<WaveItem>) = with(binding) {
+        waveFormEditorView.setWaves(waves)
+        exportButtonTextView.isVisible = waves.size > MIN_SIZE_FOR_EXPORT
+    }
+
+    private companion object {
+        const val MIN_SIZE_FOR_EXPORT = 3
     }
 }

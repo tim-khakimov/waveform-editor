@@ -32,7 +32,7 @@ class WaveFormsViewModel : ViewModel() {
             }.onSuccess {
                 loadWaveForms()
             }.onFailure {
-                //TODO handle error
+                it.printStackTrace()
             }
         }
     }
@@ -44,7 +44,7 @@ class WaveFormsViewModel : ViewModel() {
             }.onSuccess {
                 _waveFormsList.emit(it)
             }.onFailure {
-                //TODO handle error
+                it.printStackTrace()
             }
         }
     }
@@ -58,7 +58,7 @@ class WaveFormsViewModel : ViewModel() {
             }.onSuccess {
                 _waves.emit(it)
             }.onFailure {
-                //TODO handle error
+               it.printStackTrace()
             }
         }
     }

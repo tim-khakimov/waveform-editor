@@ -20,8 +20,8 @@ class WaveFormEditorView @JvmOverloads constructor(
 
     private var waves: List<WaveItem> = listOf()
     private var moveDividerType = MoveDividerType.NOTHING
-    private var leftDividerPosition = 0.2f
-    private var rightDividerPosition = 0.8f
+    private var leftDividerPosition = 0f
+    private var rightDividerPosition = 1f
 
     private val wavesPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -34,9 +34,6 @@ class WaveFormEditorView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_MOVE) {
-            Log.d(TAG, "onTouchEvent x = ${event.x}")
-        }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 return if (isDividerTouched(event.x)) {
@@ -162,11 +159,6 @@ class WaveFormEditorView @JvmOverloads constructor(
         canvas.drawPath(path, dividersPaint)
     }
 
-    fun setWaves(waves: List<WaveItem>) {
-        this.waves = waves
-        invalidate()
-    }
-
     private fun moveDivider(x: Float) {
         val width = width.toFloat()
         val relativeX = x / width
@@ -196,6 +188,19 @@ class WaveFormEditorView @JvmOverloads constructor(
             }
             else -> relativeX
         }
+    }
+
+    fun setWaves(waves: List<WaveItem>) {
+        this.waves = waves
+        leftDividerPosition = 0f
+        rightDividerPosition = 1f
+        invalidate()
+    }
+
+    fun exportSlice(): List<WaveItem> {
+        val leftWaveIndex = (waves.size * leftDividerPosition).toInt()
+        val rightWaveIndex = (waves.size * rightDividerPosition).toInt()
+        return waves.subList(leftWaveIndex, rightWaveIndex)
     }
 
     enum class MoveDividerType {
