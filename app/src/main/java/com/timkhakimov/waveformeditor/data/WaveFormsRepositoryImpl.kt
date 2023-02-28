@@ -1,7 +1,6 @@
 package com.timkhakimov.waveformeditor.data
 
 import android.content.res.AssetManager
-import android.util.Log
 import com.timkhakimov.waveformeditor.model.AudioWaveForm
 import com.timkhakimov.waveformeditor.model.WaveItem
 import kotlinx.coroutines.flow.MutableStateFlow

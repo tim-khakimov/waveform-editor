@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.Path
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.timkhakimov.waveformeditor.model.WaveItem
@@ -22,6 +21,8 @@ class WaveFormEditorView @JvmOverloads constructor(
     private var moveDividerType = MoveDividerType.NOTHING
     private var leftDividerPosition = 0f
     private var rightDividerPosition = 1f
+
+    private val path = Path()
 
     private val wavesPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -58,9 +59,10 @@ class WaveFormEditorView @JvmOverloads constructor(
         super.onDraw(canvas)
         val width = width.toFloat()
         val height = height.toFloat()
-        canvas.drawPath(
-            createWavesPath(width, height, waves),
-            wavesPaint
+        drawWavesPath(
+            canvas,
+            width,
+            height,
         )
         drawLeftDivider(
             canvas,
@@ -79,38 +81,49 @@ class WaveFormEditorView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun createWavesPath(
+    private fun drawWavesPath(
+        canvas: Canvas,
         width: Float,
         height: Float,
-        waves: List<WaveItem>
-    ): Path {
-        val path = Path()
+    ) {
+        path.reset()
         if (waves.size < 2) {
-            return path
+            return
         }
         val waveWidth = width / (waves.size - 1)
         var currentWaveHorizontalPosition = 0f
         val firstWaveItem = waves.first()
-        path.moveTo(0f, calculateVerticalPointForWavePoint(height, firstWaveItem.top))
+        path.moveTo(
+            0f,
+            calculateVerticalPointForWavePoint(height, firstWaveItem.top)
+        )
         for (index in 1 until waves.size) {
             val waveItem = waves[index]
             currentWaveHorizontalPosition += waveWidth
-            path.lineTo(currentWaveHorizontalPosition, calculateVerticalPointForWavePoint(height, waveItem.top))
+            path.lineTo(
+                currentWaveHorizontalPosition,
+                calculateVerticalPointForWavePoint(height, waveItem.top)
+            )
         }
         val lastWaveItem = waves.last()
-        path.lineTo(width, calculateVerticalPointForWavePoint(height, lastWaveItem.bottom))
+        path.lineTo(
+            width,
+            calculateVerticalPointForWavePoint(height, lastWaveItem.bottom)
+        )
         for (index in waves.size - 2 downTo 0) {
             val waveItem = waves[index]
             currentWaveHorizontalPosition -= waveWidth
-            path.lineTo(currentWaveHorizontalPosition, calculateVerticalPointForWavePoint(height, waveItem.bottom))
+            path.lineTo(
+                currentWaveHorizontalPosition,
+                calculateVerticalPointForWavePoint(height, waveItem.bottom)
+            )
         }
-        return path
+        canvas.drawPath(path, wavesPaint)
     }
 
     private fun calculateVerticalPointForWavePoint(height: Float, value: Double): Float {
         val temp = ((1 - value) / 2).toFloat()
-        val pointY = height * temp
-        return pointY
+        return height * temp
     }
 
     private fun isDividerTouched(x: Float): Boolean {
@@ -132,7 +145,7 @@ class WaveFormEditorView @JvmOverloads constructor(
         width: Float,
         height: Float,
     ) {
-        val path = Path()
+        path.reset()
         val leftX = width * leftDividerPosition
         val wedgeSize = width * DIVIDER_WEDGE_RELATIVE_SIZE
         path.moveTo(leftX, 0f)
@@ -148,7 +161,7 @@ class WaveFormEditorView @JvmOverloads constructor(
         width: Float,
         height: Float,
     ) {
-        val path = Path()
+        path.reset()
         val rightX = width * rightDividerPosition
         val wedgeSize = width * DIVIDER_WEDGE_RELATIVE_SIZE
         path.moveTo(rightX, 0f)
@@ -210,7 +223,6 @@ class WaveFormEditorView @JvmOverloads constructor(
     }
 
     private companion object {
-        const val TAG = "WaveFormEditorView"
         const val DIVIDER_RELATIVE_MIN_DISTANCE = 0.1f
         const val DIVIDER_RELATIVE_TOUCH_OFFSET = 0.05f
         const val DIVIDER_RELATIVE_WIDTH = 0.01f
