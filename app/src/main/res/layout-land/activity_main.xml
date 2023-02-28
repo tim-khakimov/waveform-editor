@@ -9,11 +9,24 @@
     <com.timkhakimov.waveformeditor.ui.view.WaveFormEditorView
         android:id="@+id/waveFormEditorView"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/exportButtonTextView"
+        app:layout_constraintDimensionRatio="h, 0.7:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/exportButtonTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:padding="20dp"
+        android:text="@string/export"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/selectedWaveFormNameTextView"
@@ -22,32 +35,19 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/exportButtonTextView"
+        app:layout_constraintStart_toStartOf="@+id/waveFormEditorView"
         app:layout_constraintTop_toBottomOf="@+id/waveFormEditorView"
         tools:text="Select file" />
-
-    <TextView
-        android:id="@+id/exportButtonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="@string/export"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waveFormEditorView"
-        android:layout_marginHorizontal="20dp" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/waveFormsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/waveFormEditorView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedWaveFormNameTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
