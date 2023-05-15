@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class WaveFormsRepositoryImpl(
     private val assets: AssetManager,
@@ -24,9 +22,7 @@ class WaveFormsRepositoryImpl(
             itemsFromAssets.value
         }
         val downloadItems = loadFromDownloads()
-        return suspendCoroutine {
-            it.resume(assetsItems + downloadItems)
-        }
+        return assetsItems + downloadItems
     }
 
     override suspend fun getWaveItemsFromForm(waveFormItem: AudioWaveForm): List<WaveItem> {
@@ -39,17 +35,13 @@ class WaveFormsRepositoryImpl(
 
     private suspend fun getWavesFromAssets(name: String): List<WaveItem> {
         val fullPath = WAVEFORMS_DIRECTORY + File.separator + name
-        return suspendCoroutine {
-            it.resume(assets.open(fullPath).reader().getWaveItems())
-        }
+        return assets.open(fullPath).reader().getWaveItems()
     }
 
     private suspend fun getWavesFromDownload(name: String): List<WaveItem> {
         val fullPath = downloadsDir.path + File.separator + WAVEFORMS_DIRECTORY + File.separator + name
         val file = File(fullPath)
-        return suspendCoroutine {
-            it.resume(file.inputStream().reader().getWaveItems())
-        }
+        return file.inputStream().reader().getWaveItems()
     }
 
     private fun InputStreamReader.getWaveItems(): List<WaveItem> {
@@ -81,9 +73,6 @@ class WaveFormsRepositoryImpl(
         outputStreamWriter.write(builder.toString().trim())
         outputStreamWriter.flush()
         outputStreamWriter.close()
-        return suspendCoroutine {
-            it.resume(Unit)
-        }
     }
 
     private suspend fun loadFromAssets(): List<AudioWaveForm> {
@@ -94,9 +83,7 @@ class WaveFormsRepositoryImpl(
             )
         } ?: listOf()
         itemsFromAssets.emit(items)
-        return suspendCoroutine {
-            it.resume(items)
-        }
+        return items
     }
 
     private suspend fun loadFromDownloads(): List<AudioWaveForm> {
@@ -110,9 +97,7 @@ class WaveFormsRepositoryImpl(
                 isFromAssets = false
             )
         } ?: listOf()
-        return suspendCoroutine {
-            it.resume(items)
-        }
+        return items
     }
 
     private companion object {
