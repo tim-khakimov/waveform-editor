@@ -1,6 +1,5 @@
 package com.timkhakimov.waveformeditor.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.timkhakimov.waveformeditor.data.WaveFormsRepository
@@ -50,7 +49,6 @@ class WaveFormsViewModel : ViewModel() {
     }
 
     fun startAudioForm(audioWaveForm: AudioWaveForm) {
-        Log.d("WaveFormsViewModel", "startAudioForm: ${audioWaveForm.name}")
         _selectedWaveForm.update { audioWaveForm }
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
