@@ -1,15 +1,21 @@
 package com.timkhakimov.waveformeditor.ui.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.Path
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.timkhakimov.waveformeditor.R
 import com.timkhakimov.waveformeditor.model.WaveItem
+
 
 class WaveFormEditorView @JvmOverloads constructor(
     context: Context,
@@ -31,7 +37,7 @@ class WaveFormEditorView @JvmOverloads constructor(
 
     private val dividersPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.BLACK
+        color = context.resources.getColor(R.color.handle_color)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -220,6 +226,58 @@ class WaveFormEditorView @JvmOverloads constructor(
         LEFT,
         RIGHT,
         NOTHING,
+    }
+
+
+
+    @SuppressLint("MissingSuperCall")
+    override fun onSaveInstanceState(): Parcelable? {
+        val parcelable = super.onSaveInstanceState()
+        val savedState = SavedState(parcelable)
+        savedState.left = leftDividerPosition
+        savedState.right = rightDividerPosition
+        return savedState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val savedState: SavedState? = state as? SavedState
+        super.onRestoreInstanceState(savedState?.superState)
+        savedState?.left?.let {
+            leftDividerPosition = it
+        }
+        savedState?.right?.let {
+            rightDividerPosition = it
+        }
+        invalidate()
+    }
+
+    private class SavedState : BaseSavedState {
+        var left: Float = 0f
+        var right: Float = 0f
+
+        internal constructor(superState: Parcelable?) : super(superState) {}
+        private constructor(`in`: Parcel) : super(`in`) {
+            left = `in`.readFloat()
+            right = `in`.readFloat()
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeFloat(left)
+            out.writeFloat(right)
+        }
+
+        @JvmField
+        val CREATOR: Creator<SavedState> =
+            object : Creator<SavedState> {
+                override fun createFromParcel(`in`: Parcel): SavedState {
+                    return SavedState(`in`)
+                }
+
+                override fun newArray(size: Int): Array<SavedState?> {
+                    return arrayOfNulls<SavedState>(size)
+                }
+            }
     }
 
     private companion object {
