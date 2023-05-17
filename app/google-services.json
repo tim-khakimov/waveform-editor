@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "765959899323",
+    "project_id": "testpersonal-50771",
+    "storage_bucket": "testpersonal-50771.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765959899323:android:cdc7790a567755da43c19e",
+        "android_client_info": {
+          "package_name": "com.timkhakimov.waveformeditor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "765959899323-lapbff8vbj45kkq54ue2eors5p273e6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJOoAyVetoMYad23XFEoWSKIO0Zyc2ZN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "765959899323-lapbff8vbj45kkq54ue2eors5p273e6t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
