@@ -1,0 +1,15 @@
+name: Trigger Jenkins when push to beta
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Jenkins
+      run: |
+        curl -X POST "http://81.200.151.166:8080/job/WaveForm_Build_Beta/build?token=test_token_for_build_beta" 
