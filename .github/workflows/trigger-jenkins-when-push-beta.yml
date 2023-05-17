@@ -12,4 +12,4 @@ jobs:
     steps:
     - name: Trigger Jenkins
       run: |
-        curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta/build?token=test_token_for_build_beta" 
+        curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta/build?token=test_token_for_build_beta" -u timur:test_token_for_build_beta
