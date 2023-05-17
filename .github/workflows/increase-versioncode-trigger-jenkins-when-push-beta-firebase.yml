@@ -1,0 +1,38 @@
+name: Increase versionCode and trigger Jenkins
+
+on:
+  push:
+    branches:
+      - beta-firebase
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+
+    - name: Increase versionCode
+      run: |
+        cd path/to/your/app
+        versionCode=$(grep versionCode build.gradle | awk '{print $2}')
+        newVersionCode=$((versionCode + 1))
+        sed -i "s/versionCode $versionCode/versionCode $newVersionCode/g" build.gradle
+
+    - name: Commit and push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Increase versionCode"
+        git push
+
+    - name: Trigger Jenkins
+      run: |
+        curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta_Firebase/build?token=test_token_for_build_beta_firebase" -u timur:timur
