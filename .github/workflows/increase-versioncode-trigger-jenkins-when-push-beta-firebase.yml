@@ -21,7 +21,7 @@ jobs:
 
     - name: Increase versionCode
       run: |
-        cd path/to/your/app
+        cd app
         versionCode=$(grep versionCode build.gradle | awk '{print $2}')
         newVersionCode=$((versionCode + 1))
         sed -i "s/versionCode $versionCode/versionCode $newVersionCode/g" build.gradle
