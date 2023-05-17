@@ -24,10 +24,14 @@ jobs:
     - name: Increase versionCode
       run: |
         cd app
-        version=$(grep -m 1 "^def version" build.gradle | awk '{print $3}')
+        version=$(grep -m 1 "^def version" build.gradle | cut -d' ' -f3)
         newVersion=$((version + 1))
+        echo "Before sed:"
+        cat build.gradle
         sed -i "s/^def version $version/def version $newVersion/g" build.gradle
-        
+        echo "After sed:"
+        cat build.gradle
+
     - name: Add changes to git
       run: |
         git add app/build.gradle
