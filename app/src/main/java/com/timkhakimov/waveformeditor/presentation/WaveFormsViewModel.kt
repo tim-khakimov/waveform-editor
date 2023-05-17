@@ -1,12 +1,10 @@
 package com.timkhakimov.waveformeditor.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.timkhakimov.waveformeditor.data.WaveFormsRepository
 import com.timkhakimov.waveformeditor.model.AudioWaveForm
 import com.timkhakimov.waveformeditor.model.WaveItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +24,7 @@ class WaveFormsViewModel : ViewModel() {
     val waves = _waves.asStateFlow()
 
     fun addWaveForm(waveItems: List<WaveItem>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             runCatching {
                 repository.addWaveForm(waveItems)
             }.onSuccess {
@@ -38,7 +36,7 @@ class WaveFormsViewModel : ViewModel() {
     }
 
     fun loadWaveForms() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             runCatching {
                 repository.getWaveForms()
             }.onSuccess {
@@ -50,9 +48,8 @@ class WaveFormsViewModel : ViewModel() {
     }
 
     fun startAudioForm(audioWaveForm: AudioWaveForm) {
-        Log.d("WaveFormsViewModel", "startAudioForm: ${audioWaveForm.name}")
         _selectedWaveForm.update { audioWaveForm }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             runCatching {
                 repository.getWaveItemsFromForm(audioWaveForm)
             }.onSuccess {
