@@ -33,6 +33,11 @@ android {
     buildFeatures {
         viewBinding true
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${applicationName}-${variant.name}-${variant.versionCode}.apk"
+        }
+    }
 }
 
 dependencies {
