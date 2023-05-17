@@ -35,7 +35,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "${applicationName}-${variant.name}-${variant.versionCode}.apk"
+            outputFileName = "waveformeditor-${variant.name}-${variant.versionCode}.apk"
         }
     }
 }
