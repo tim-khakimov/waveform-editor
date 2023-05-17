@@ -24,9 +24,9 @@ jobs:
     - name: Increase versionCode
       run: |
         cd app
-        versionCode=$(grep versionCode build.gradle | awk '{print $2}')
-        newVersionCode=$((versionCode + 1))
-        sed -i "s/versionCode $versionCode/versionCode $newVersionCode/g" build.gradle
+        version=$(grep version build.gradle | awk '{print $2}')
+        newVersion=$((version + 1))
+        sed -i "s/version $version/version $newVersion/g" build.gradle
 
     - name: Commit and push
       run: |

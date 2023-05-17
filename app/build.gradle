@@ -5,6 +5,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def version = 21
+def versionNamePrefix = "0.0."
+
 android {
     compileSdk 33
 
@@ -12,8 +15,8 @@ android {
         applicationId "com.timkhakimov.waveformeditor"
         minSdk 21
         targetSdk 33
-        versionCode 23
-        versionName "1.0"
+        versionCode version
+        versionName versionNamePrefix + versionCode
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
