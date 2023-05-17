@@ -33,7 +33,9 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -am "Increase versionCode"
-        git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
+        if [[ `git diff --stat --staged` != '' ]]; then
+          git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
+        fi
 
     - name: Trigger Jenkins
       run: |
