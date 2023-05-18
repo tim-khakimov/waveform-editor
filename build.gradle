@@ -18,7 +18,7 @@ plugins {
 }
 
 ext {
-    versionCodeValue = 46
+    versionCodeValue = 47
 }
 
 allprojects {
