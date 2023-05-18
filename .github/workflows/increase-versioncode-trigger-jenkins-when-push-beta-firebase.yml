@@ -23,6 +23,8 @@ jobs:
 
       - name: Increase versionCodeValue
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           versionCodeValue=$(grep versionCodeValue build.gradle | awk '{print $3}' | tr -d '\n')
           newVersionCodeValue=$((versionCodeValue + 1))
           sed -i "s/versionCodeValue = $versionCodeValue/versionCodeValue = $newVersionCodeValue/" build.gradle
