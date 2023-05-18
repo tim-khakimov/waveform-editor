@@ -23,14 +23,13 @@ jobs:
 
     - name: Increase versionCode
       run: |
-        cd app
         echo "Before increase:"
         cat build.gradle
-        version=$(grep -m 1 "^def version" build.gradle | tr -dc '0-9')
-        echo "Current version: $version"
+        version=$(grep -m 1 "^ext.versionCodeValue" build.gradle | tr -dc '0-9')
+        echo "Current versionCodeValue: $version"
         newVersion=$((version + 1))
-        echo "New version: $newVersion"
-        sed -i "s/\(def version[[:space:]]*\)[0-9]\+/\1$newVersion/" build.gradle
+        echo "New versionCodeValue: $newVersion"
+        sed -i "s/\(ext.versionCodeValue[[:space:]]*\)[0-9]\+/\1$newVersion/" build.gradle
         echo "After increase:"
         cat build.gradle
 
