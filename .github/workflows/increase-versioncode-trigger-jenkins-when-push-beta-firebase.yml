@@ -10,42 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.REPO_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
 
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v2
-      with:
-        java-version: '8'
-        distribution: 'adopt'
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
 
-    - name: Increase versionCode
-      run: |
-        echo "Before increase:"
-        cat build.gradle
-        version=$(grep -m 1 "^ext.versionCodeValue" build.gradle | tr -dc '0-9')
-        echo "Current versionCodeValue: $version"
-        newVersion=$((version + 1))
-        echo "New versionCodeValue: $newVersion"
-        sed -i "s/\(ext.versionCodeValue[[:space:]]*\)[0-9]\+/\1$newVersion/" build.gradle
-        echo "After increase:"
-        cat build.gradle
+      - name: Increase versionCodeValue
+        run: |
+          versionCodeValue=$(grep versionCodeValue build.gradle | awk '{print $3}' | tr -d '\n')
+          newVersionCodeValue=$((versionCodeValue + 1))
+          sed -i "s/versionCodeValue = $versionCodeValue/versionCodeValue = $newVersionCodeValue/" build.gradle
+          git add build.gradle
+          git commit -m "Increase versionCodeValue to $newVersionCodeValue"
 
-    - name: Add changes to git
-      run: |
-        git add build.gradle
+      - name: Add changes to git
+        run: |
+          git add build.gradle
 
-    - name: Commit and push
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -am "Increase versionCodeValue"
-        if [[ `git diff --stat --staged` != '' ]]; then
-          git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
-        fi
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Increase versionCodeValue"
+          if [[ `git diff --stat --staged` != '' ]]; then
+            git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
+          fi
 
-    - name: Trigger Jenkins
-      run: |
-        curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta_Firebase/build?token=test_token_for_build_beta_firebase" -u timur:timur
+      - name: Trigger Jenkins
+        run: |
+          curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta_Firebase/build?token=test_token_for_build_beta_firebase" -u timur:timur
