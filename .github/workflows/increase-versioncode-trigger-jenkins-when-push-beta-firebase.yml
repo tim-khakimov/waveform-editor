@@ -35,13 +35,13 @@ jobs:
 
     - name: Add changes to git
       run: |
-        git add app/build.gradle
+        git add build.gradle
 
     - name: Commit and push
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git commit -am "Increase versionCode"
+        git commit -am "Increase versionCodeValue"
         if [[ `git diff --stat --staged` != '' ]]; then
           git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
         fi
