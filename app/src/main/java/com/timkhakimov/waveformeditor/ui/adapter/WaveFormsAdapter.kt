@@ -21,7 +21,6 @@ class WaveFormsAdapter(
 
     fun setWaveForms(waveForms: List<AudioWaveForm>) {
         items = waveForms
-        //TODO implement DiffUtil
         notifyDataSetChanged()
     }
 }

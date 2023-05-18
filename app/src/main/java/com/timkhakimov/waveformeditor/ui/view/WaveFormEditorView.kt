@@ -16,7 +16,6 @@ import android.view.View
 import com.timkhakimov.waveformeditor.R
 import com.timkhakimov.waveformeditor.model.WaveItem
 
-
 class WaveFormEditorView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
