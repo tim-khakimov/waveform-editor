@@ -15,28 +15,41 @@ jobs:
         with:
           token: ${{ secrets.REPO_TOKEN }}
 
+      - name: Check last commit
+        id: last_commit
+        run: |
+          last_commit_message=$(git log -1 --pretty=format:%s)
+          if [[ $last_commit_message == "Increase versionCodeValue"* ]]; then
+            echo "Version update commit detected, stopping the job"
+            echo "::set-output name=skip::true"
+          else
+            echo "::set-output name=skip::false"
+          fi
+
       - name: Set up JDK 1.8
+        if: steps.last_commit.outputs.skip != 'true'
         uses: actions/setup-java@v2
         with:
           java-version: '8'
           distribution: 'adopt'
 
       - name: Increase versionCodeValue
-        run: |
-          versionCodeValue=$(grep versionCodeValue build.gradle | awk -F'=' '{print $2}' | tr -d ' \n')
-          newVersionCodeValue=$((versionCodeValue + 1))
-          sed -i "s/versionCodeValue = $versionCodeValue/versionCodeValue = $newVersionCodeValue/" build.gradle
-
-      - name: Commit and push
+        if: steps.last_commit.outputs.skip != 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          versionCodeValue=$(grep versionCodeValue build.gradle | awk -F'=' '{print $2}' | tr -d ' \n')
+          newVersionCodeValue=$((versionCodeValue + 1))
+          sed -i "s/versionCodeValue = $versionCodeValue/versionCodeValue = $newVersionCodeValue/" build.gradle
           git add build.gradle
-          git commit -am "Increase versionCode"
-          if [[ `git diff --stat --staged` != '' ]]; then
-            git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
-          fi
+          git commit -m "Increase versionCodeValue to $newVersionCodeValue"
+
+      - name: Push changes
+        if: steps.last_commit.outputs.skip != 'true'
+        run: |
+          git push https://${{ secrets.REPO_TOKEN }}@github.com/tim-khakimov/waveform-editor.git HEAD:beta-firebase
 
       - name: Trigger Jenkins
+        if: steps.last_commit.outputs.skip != 'true'
         run: |
           curl -X GET "http://81.200.151.166:8080/job/WaveForm_Build_Beta_Firebase/build?token=test_token_for_build_beta_firebase" -u timur:timur
